@@ -64,3 +64,12 @@ function input_pw() {
   done
   printf -v $outvar "$pw"
 }
+
+function confirm() {
+  choices=(
+  "yes"
+  "no"
+  )
+  choose_from_menu "$1" answer "${choices[@]}"
+  return $answer
+}

@@ -44,7 +44,7 @@ sed -i "s@MYSQL_PW = .*@MYSQL_PW = \"${mysql_pw}\";@" devenv.nix
 
 printf "%s\n" "creating composer project..."
 composer create-project typo3/cms-base-distribution tmp "${version}" && \
-  mv tmp/{public,config,composer*,vendor} . && \
+  mv tmp/{public,composer*,vendor} . && \
   rm -r tmp/ || {
   echo "something went wrong with the creation of the project files"
   exit 3 
@@ -57,6 +57,7 @@ choices=(
 choose_from_menu "Do you want to install typo3 with the applied values?" is_unattended_install "${choices[@]}"
 [[ $is_unattended_install == 0 ]] && { 
   mv .devenv/processes.log .devenv/processes.log.bk &> /dev/null 
+  devenv processes stop 2&> /dev/null 
   devenv up -d && \
   while true; do
     grep -e "\[mysql\s.*socket" .devenv/processes.log &> /dev/null \
@@ -75,7 +76,8 @@ choose_from_menu "Do you want to install typo3 with the applied values?" is_unat
     echo "email:"
     read -r email 
     input_pw "" typo3_pw
-
+    printf "username: %s\n email: %s " "$typo3_user" "$email" 
+    confirm "correct?" || continue
     composer exec -- typo3 setup \
       --server-type=other --force\
       --no-interaction \

@@ -2,7 +2,7 @@ let
   NGINX_ROOT = "/home/m1nd/Projekte/devenv/typo3/public/";
   NGINX_PORT = "8080";
   MYSQL_USER = "admin";
-  MYSQL_PW = "M4n4";
+  MYSQL_PW = "";
 in
 { pkgs, lib, config, inputs, ... }:
 
